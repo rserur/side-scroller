@@ -9,24 +9,45 @@ var canvas = document.getElementById("canvas"),
     width = 1000,
     height = 400,
     player = {
-        x: width / 2,
-        y: height - 5,
-        width: 5,
-        height: 5,
+        x: (width / 2) - 40,
+        y: (height - 5) - 40,
+        width: 40,
+        height: 80,
         speed: 3,
         velX: 0,
         velY: 0,
         jumping: false,
-        grounded: false
+        grounded: false,
+        img: new Image()
     },
     keys = [],
     friction = 0.8,
     gravity = 0.2;
 
 background.src = 'img/KB_Stage2.png';
-
+player.img.src = 'img/AxelSOR1.gif';
 
 var boxes = [];
+var frame = 1;
+var counter = 0;
+
+function animate() {
+    counter++;
+
+    if (counter == 40) {
+        counter = 0;
+    }
+
+    if (counter <= 10) {
+        frame = 1;
+    } else if (10 > counter <= 20) {
+        frame = 2;
+    } else if (20 > counter <= 30) {
+        frame = 3;
+    } else {
+        frame = 4;
+    }
+}
 
 boxes.push({
     x: 0,
@@ -65,12 +86,14 @@ function update() {
         // right arrow
         if (player.velX < player.speed) {
             player.velX++;
+            animate();
         }
     }
     if (keys[37]) {
         // left arrow
         if (player.velX > -player.speed) {
             player.velX--;
+            animate();
         }
     }
 
@@ -106,9 +129,8 @@ function update() {
 
     ctx.fill();
 
-    ctx.fillStyle = "blue";
-    ctx.fillRect(player.x, player.y, player.width, player.height);
-    // run through loop
+    ctx.drawImage(player.img, 0, (frame * 90), player.width, player.height, player.x, player.y, player.width, player.height);
+
     requestAnimationFrame(update);
 }
 
